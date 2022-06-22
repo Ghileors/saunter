@@ -29,9 +29,10 @@ export const Map: FC<MapProps> = ({ center }) => {
   }, []);
 
   const fetchDirection = () => {
-    if (!markers.length) return;
-    const start = markers[0];
-    const end = markers[markers.length - 1];
+    const length = markers.length;
+    if (!length) return;
+    const start = markers[0].location;
+    const end = markers[length - 1].location;
 
     if (start && end) {
       const waypoints = markers.map(({ latLng }) => ({
@@ -55,22 +56,22 @@ export const Map: FC<MapProps> = ({ center }) => {
     }
   };
 
-  const getLatLng = (latLng: LatLng | null) => {
+  const getLocationData = (latLng: LatLng | null) => {
     if (latLng) {
-      return { lat: latLng!.lat(), lng: latLng!.lng(), latLng };
+      return { location: { lat: latLng!.lat(), lng: latLng!.lng() }, latLng };
     }
     return null;
   };
 
   const onSetMarker = (e: MapMouseEvent) => {
-    const latLng = getLatLng(e.latLng);
+    const latLng = getLocationData(e.latLng);
     if (latLng) {
       setMarkers((prev) => [...prev, { ...latLng, id: nanoid() }]);
     }
   };
 
   const moveMarker = (e: MapMouseEvent, id: markerId) => {
-    const latLng = getLatLng(e.latLng);
+    const latLng = getLocationData(e.latLng);
     if (latLng) {
       const copyMarkers = markers.map((marker) => {
         if (marker.id === id) {
@@ -103,12 +104,12 @@ export const Map: FC<MapProps> = ({ center }) => {
           onClick={onSetMarker}
         >
           {directions && <DirectionsRenderer directions={directions} options={directionOptions} />}
-          {markers.map((location) => (
+          {markers.map((marker) => (
             <Marker
-              key={location.id}
-              position={location}
+              key={marker.id}
+              position={marker.location}
               draggable={true}
-              onMouseUp={(e) => moveMarker(e, location.id)}
+              onMouseUp={(e) => moveMarker(e, marker.id)}
             />
           ))}
         </GoogleMap>

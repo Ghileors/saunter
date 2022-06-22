@@ -1,6 +1,7 @@
-import { markerId, LatLng } from '../types/google-types';
+import { markerId, LatLng, LatLngLiteral } from '../types/google-types';
 
-export interface LatLngInterface extends google.maps.LatLngLiteral {
+export interface LatLngInterface {
   readonly id?: markerId;
+  location: LatLngLiteral;
   latLng: LatLng;
 }
