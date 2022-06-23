@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { Marker } from '@react-google-maps/api';
-import { LatLngInterface } from '../../interfaces/google-interfaces';
 import MarkerIcon from '../../assets/marker.png';
+import { LatLngLiteral } from '../../types/google-types';
 
 interface MarkerProps {
-  position: LatLngInterface;
+  position: LatLngLiteral;
 }
 
 export const CurrentLocationMarker: FC<MarkerProps> = ({ position }) => {
