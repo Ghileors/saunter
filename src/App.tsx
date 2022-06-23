@@ -1,6 +1,11 @@
 import React, { FC, useState } from 'react';
 import { useJsApiLoader } from '@react-google-maps/api';
-import { Map } from './components/Map';
+import { Col, Container, Row } from 'react-bootstrap';
+import { Header } from './components/Header/Header';
+import { SearchRoute } from './components/Routes/SearchRoute';
+import { RoutersList } from './components/Routes/RoutersList';
+import { FullDesc } from './components/Routes/FullDesc';
+import { AddRoute } from './components/Routes/AddRoute';
 import { LatLngLiteral } from './types/google-types';
 
 import './App.module.css';
@@ -13,6 +18,7 @@ const defaultCenter = {
 const API_KEY = `${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
 const App: FC = () => {
+  const [show, setShow] = useState(false);
   const [center, setCenters] = useState<LatLngLiteral>(defaultCenter);
 
   const { isLoaded } = useJsApiLoader({
@@ -25,10 +31,25 @@ const App: FC = () => {
     return <h1>Loading...</h1>;
   }
 
+  const toggleShowState = () => {
+    setShow((prev) => !prev);
+  };
+
   return (
-    <div>
-      <Map center={center} />
-    </div>
+    <Container className="overflow-hidden">
+      <Header handleOpen={toggleShowState} />
+      <Row>
+        <Col className="gap-4">
+          <SearchRoute />
+
+          <RoutersList />
+        </Col>
+        <Col>
+          <FullDesc />
+        </Col>
+      </Row>
+      <AddRoute show={show} handleClose={toggleShowState} />
+    </Container>
   );
 };
 
