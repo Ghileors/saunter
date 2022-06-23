@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
-import { Distance } from './Distance';
 import { CurrentLocationMarker } from '../CurrentLocationMarker';
 import { directionOptions, mapOptions } from '../../configs/map.options';
 import { DirectionsResult, LatLngLiteral, LatLng, MapMouseEvent } from '../../types/google-types';
@@ -10,7 +9,8 @@ import { ILatLng } from '../../interfaces/ILatLng';
 import style from './Map.module.css';
 
 interface MapProps {
-  center: LatLngLiteral;
+  center?: LatLngLiteral;
+  markers?: ILatLng[];
 }
 
 export const Map: FC<MapProps> = ({ center }) => {
@@ -86,30 +86,23 @@ export const Map: FC<MapProps> = ({ center }) => {
   }, [markers]);
 
   return (
-    <div className={style.container}>
-      <div className={style.controls}>
-        {directions && <Distance leg={directions.routes[0].legs[0]} />}
-      </div>
-      <div className={style.map}>
-        <GoogleMap
-          mapContainerClassName={style.mapContainer}
-          options={mapOptions}
-          center={center}
-          zoom={10}
-          onLoad={onLoad}
-          onClick={onSetMarker}
-        >
-          {directions && <DirectionsRenderer directions={directions} options={directionOptions} />}
-          {markers.map((marker) => (
-            <Marker
-              key={marker.id}
-              position={marker.position}
-              draggable={true}
-              onMouseUp={(e) => moveMarker(e, marker.id)}
-            />
-          ))}
-        </GoogleMap>
-      </div>
-    </div>
+    <GoogleMap
+      mapContainerClassName={style.mapContainer}
+      options={mapOptions}
+      center={center}
+      zoom={10}
+      onLoad={onLoad}
+      onClick={onSetMarker}
+    >
+      {directions && <DirectionsRenderer directions={directions} options={directionOptions} />}
+      {markers.map((marker) => (
+        <Marker
+          key={marker.id}
+          position={marker.position}
+          draggable={true}
+          onMouseUp={(e) => moveMarker(e, marker.id)}
+        />
+      ))}
+    </GoogleMap>
   );
 };
