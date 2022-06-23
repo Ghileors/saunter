@@ -4,14 +4,8 @@ import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import { Distance } from './Distance';
 import { CurrentLocationMarker } from '../CurrentLocationMarker';
 import { directionOptions, mapOptions } from '../../configs/map.options';
-import {
-  DirectionsResult,
-  LatLngLiteral,
-  LatLng,
-  MapMouseEvent,
-  markerId,
-} from '../../types/google-types';
-import { LatLngInterface } from '../../interfaces/google-interfaces';
+import { DirectionsResult, LatLngLiteral, LatLng, MapMouseEvent } from '../../types/google-types';
+import { ILatLng } from '../../interfaces/ILatLng';
 
 import style from './Map.module.css';
 
@@ -21,7 +15,7 @@ interface MapProps {
 
 export const Map: FC<MapProps> = ({ center }) => {
   const mapRef = useRef<GoogleMap>();
-  const [markers, setMarkers] = useState<LatLngInterface[]>([]);
+  const [markers, setMarkers] = useState<ILatLng[]>([]);
   const [directions, setDirections] = useState<DirectionsResult>();
 
   const onLoad = useCallback((map: any) => {
@@ -31,14 +25,16 @@ export const Map: FC<MapProps> = ({ center }) => {
   const fetchDirection = () => {
     const length = markers.length;
     if (!length) return;
-    const start = markers[0].location;
-    const end = markers[length - 1].location;
+    const start = markers[0].position;
+    const end = markers[length - 1].position;
 
     if (start && end) {
-      const waypoints = markers.map(({ latLng }) => ({
-        location: latLng,
-        stopover: false,
-      }));
+      const waypoints = markers.map(({ position }) => {
+        return {
+          location: `${position.lat},${position.lng}`,
+          stopover: false,
+        };
+      });
       const service = new google.maps.DirectionsService();
       service.route(
         {
@@ -56,26 +52,26 @@ export const Map: FC<MapProps> = ({ center }) => {
     }
   };
 
-  const getLocationData = (latLng: LatLng | null) => {
+  const getPosition = (latLng: LatLng | null) => {
     if (latLng) {
-      return { location: { lat: latLng!.lat(), lng: latLng!.lng() }, latLng };
+      return { position: { lat: latLng!.lat(), lng: latLng!.lng() } };
     }
     return null;
   };
 
   const onSetMarker = (e: MapMouseEvent) => {
-    const latLng = getLocationData(e.latLng);
-    if (latLng) {
-      setMarkers((prev) => [...prev, { ...latLng, id: nanoid() }]);
+    const position = getPosition(e.latLng);
+    if (position) {
+      setMarkers((prev) => [...prev, { ...position, id: nanoid() }]);
     }
   };
 
-  const moveMarker = (e: MapMouseEvent, id: markerId) => {
-    const latLng = getLocationData(e.latLng);
-    if (latLng) {
+  const moveMarker = (e: MapMouseEvent, id: string) => {
+    const position = getPosition(e.latLng);
+    if (position) {
       const copyMarkers = markers.map((marker) => {
         if (marker.id === id) {
-          return { ...marker, ...latLng };
+          return { ...marker, ...position };
         }
         return marker;
       });
@@ -107,7 +103,7 @@ export const Map: FC<MapProps> = ({ center }) => {
           {markers.map((marker) => (
             <Marker
               key={marker.id}
-              position={marker.location}
+              position={marker.position}
               draggable={true}
               onMouseUp={(e) => moveMarker(e, marker.id)}
             />
