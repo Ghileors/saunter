@@ -10,7 +10,7 @@ interface AddRouteProps {
 }
 
 export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
-  const { updateNewRouteField, fetchCreateRoute} = useActions();
+  const { updateNewRouteField, fetchCreateRoute } = useActions();
   const { newRoute } = useTypedSelector((state) => state.routes);
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
