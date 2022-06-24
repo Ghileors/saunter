@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ListGroup } from 'react-bootstrap';
+import { useActions } from '../../hooks/useActions';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { ShortDesc } from './ShortDesc';
 
 export const RoutersList = () => {
-  const items = [1, 2, 3, 4, 5, 6, 7, 1];
+  const { setSelectedRoute } = useActions();
+  const { routesList, selectedRoute } = useTypedSelector((state) => state.routes);
 
   return (
     <ListGroup as="ul" className="d-grid gap-2">
-      {items.map((item) => (
-        <ShortDesc />
+      {routesList.map((route) => (
+        <ShortDesc
+          key={route.id}
+          route={route}
+          isActive={selectedRoute && selectedRoute.id === route.id}
+          handleSelect={setSelectedRoute}
+        />
       ))}
     </ListGroup>
   );

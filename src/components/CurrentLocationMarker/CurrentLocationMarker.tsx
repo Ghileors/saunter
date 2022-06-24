@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Marker } from '@react-google-maps/api';
 import MarkerIcon from '../../assets/marker.png';
-import { LatLngLiteral } from '../../types/google-types';
+import { LatLngLiteral } from '../../types/google';
 
 interface MarkerProps {
   position: LatLngLiteral;

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useJsApiLoader } from '@react-google-maps/api';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Header } from './components/Header/Header';
@@ -6,26 +6,25 @@ import { SearchRoute } from './components/Routes/SearchRoute';
 import { RoutersList } from './components/Routes/RoutersList';
 import { FullDesc } from './components/Routes/FullDesc';
 import { AddRoute } from './components/Routes/AddRoute';
-import { LatLngLiteral } from './types/google-types';
+import { useActions } from './hooks/useActions';
 
-import './App.module.css';
-
-const defaultCenter = {
-  lat: 43,
-  lng: -80,
-};
+import './App.css';
 
 const API_KEY = `${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
 const App: FC = () => {
+  const { fetchRoutes } = useActions();
   const [show, setShow] = useState(false);
-  const [center, setCenters] = useState<LatLngLiteral>(defaultCenter);
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: API_KEY,
     libraries: ['places'],
   });
+
+  useEffect(() => {
+    isLoaded && fetchRoutes();
+  }, [isLoaded]);
 
   if (!isLoaded) {
     return <h1>Loading...</h1>;
@@ -36,15 +35,14 @@ const App: FC = () => {
   };
 
   return (
-    <Container className="overflow-hidden">
+    <Container className="overflow-hidden h-100">
       <Header handleOpen={toggleShowState} />
-      <Row>
+      <Row className="h-100">
         <Col className="gap-4">
           <SearchRoute />
-
           <RoutersList />
         </Col>
-        <Col>
+        <Col className="overflow-auto">
           <FullDesc />
         </Col>
       </Row>

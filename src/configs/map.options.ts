@@ -1,9 +1,10 @@
-import { MapOptions } from '../types/google-types';
+import { MapOptions } from '../types/google';
 
 export const mapOptions: MapOptions = {
   mapId: '6b00247e8652e506',
   disableDefaultUI: true,
   clickableIcons: false,
+  scrollwheel: true,
 };
 
 export const directionOptions = {

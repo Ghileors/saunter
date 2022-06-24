@@ -3,17 +3,21 @@ import { nanoid } from 'nanoid';
 import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import { CurrentLocationMarker } from '../CurrentLocationMarker';
 import { directionOptions, mapOptions } from '../../configs/map.options';
-import { DirectionsResult, LatLngLiteral, LatLng, MapMouseEvent } from '../../types/google-types';
-import { ILatLng } from '../../interfaces/ILatLng';
+import { DirectionsResult, LatLngLiteral, LatLng, MapMouseEvent } from '../../types/google';
+import { ILatLng } from '../../types/google';
+import { useActions } from '../../hooks/useActions';
 
 import style from './Map.module.css';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 
 interface MapProps {
   center?: LatLngLiteral;
   markers?: ILatLng[];
 }
 
-export const Map: FC<MapProps> = ({ center }) => {
+export const Map: FC<MapProps> = () => {
+  const { updateNewRouteField, updateCenter } = useActions();
+  const { center } = useTypedSelector((state) => state.routes);
   const mapRef = useRef<GoogleMap>();
   const [markers, setMarkers] = useState<ILatLng[]>([]);
   const [directions, setDirections] = useState<DirectionsResult>();
@@ -27,6 +31,8 @@ export const Map: FC<MapProps> = ({ center }) => {
     if (!length) return;
     const start = markers[0].position;
     const end = markers[length - 1].position;
+
+    updateCenter({ lat: start.lat, lng: end.lng });
 
     if (start && end) {
       const waypoints = markers.map(({ position }) => {
@@ -46,6 +52,8 @@ export const Map: FC<MapProps> = ({ center }) => {
         (response, status) => {
           if (status === 'OK' && response) {
             setDirections(response);
+            const routeLength = response!.routes[0]!.legs[0]!.distance!.text;
+            updateNewRouteField({ routeLength, waypoints: markers });
           }
         }
       );
