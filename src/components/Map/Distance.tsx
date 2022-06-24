@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { DirectionsLeg } from '../../types/google-types';
+import { DirectionsLeg } from '../../types/google';
 
 interface DirectionProps {
   leg: DirectionsLeg;

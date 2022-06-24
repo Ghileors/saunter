@@ -1,5 +1,5 @@
 import { doc, collection, getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { IRoute } from '../interfaces/IRoute';
+import { IRoute } from '../types/route';
 
 import { db } from './db';
 
