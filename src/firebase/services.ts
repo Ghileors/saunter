@@ -15,7 +15,8 @@ export const getRoutes = async () => {
 };
 
 export const createRoute = async (route: IRoute) => {
-  await addDoc(routesCollectionRef, route);
+  const doc = await addDoc(routesCollectionRef, route);
+  return doc.id;
 };
 
 export const toggleFavorite = async (routeId: string, isFavorite: boolean) => {

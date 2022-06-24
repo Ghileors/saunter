@@ -16,8 +16,8 @@ export const FullDesc = () => {
   return (
     <Stack className="h-75">
       <div className="d-flex justify-content-between align-items-center">
-        <h3>Path title</h3>
-        <strong>1.75km</strong>
+        <h3>{selectedRoute.name}</h3>
+        <strong>{selectedRoute.routeLength}</strong>
       </div>
       <p>{selectedRoute.fullDesc}</p>
       <Card className="h-75">{/* <Map /> */}</Card>

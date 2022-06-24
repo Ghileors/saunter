@@ -31,6 +31,9 @@ export const routesReducer = (state = initialState, action: IAction): IRouteStat
     case RouteActionTypes.UPDATE_NEW_ROUTE_FIELD:
       return { ...state, newRoute: { ...state.newRoute, ...action.payload } };
 
+    case RouteActionTypes.SET_SEARCH_QUERY:
+      return { ...state, searchQuery: action.payload };
+
     default:
       return state;
   }

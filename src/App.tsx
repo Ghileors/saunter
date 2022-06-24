@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { useJsApiLoader } from '@react-google-maps/api';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Header } from './components/Header/Header';
-import { SearchRoute } from './components/Routes/SearchRoute';
+import { SearchInput } from './components/Routes/SearchInput';
 import { RoutersList } from './components/Routes/RoutersList';
 import { FullDesc } from './components/Routes/FullDesc';
 import { AddRoute } from './components/Routes/AddRoute';
@@ -39,7 +39,7 @@ const App: FC = () => {
       <Header handleOpen={toggleShowState} />
       <Row className="h-100">
         <Col className="gap-4">
-          <SearchRoute />
+          <SearchInput />
           <RoutersList />
         </Col>
         <Col className="overflow-auto">

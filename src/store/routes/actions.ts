@@ -8,13 +8,14 @@ export const fetchRoutes = () => async (dispatch: Dispatch<IAction>) => {
   dispatch({ type: RouteActionTypes.SET_ROUTES, payload: routes });
 };
 
-export const fetchCreateRoute = (route: IRoute) => async (dispatch: any) => {
-  await createRoute(route);
-  dispatch(fetchRoutes());
-};
-
 export const setSelectedRoute = (route: IRoute | null) => async (dispatch: Dispatch<IAction>) => {
   dispatch({ type: RouteActionTypes.SET_SELECTED_ROUTE, payload: route });
+};
+
+export const fetchCreateRoute = (route: IRoute) => async (dispatch: any) => {
+  const id = await createRoute(route);
+  dispatch(fetchRoutes());
+  dispatch(setSelectedRoute({ ...route, id }));
 };
 
 export const fetchToggleFavorite = (route: IRoute) => async (dispatch: any) => {
@@ -35,4 +36,8 @@ export const updateNewRouteField =
 
 export const updateCenter = (center: LatLngLiteral) => async (dispatch: Dispatch<IAction>) => {
   dispatch({ type: RouteActionTypes.UPDATE_CENTER, payload: center });
+};
+
+export const setSearchQuery = (query: string) => (dispatch: Dispatch<IAction>) => {
+  dispatch({ type: RouteActionTypes.SET_SEARCH_QUERY, payload: query });
 };
