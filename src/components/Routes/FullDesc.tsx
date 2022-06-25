@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, ButtonGroup, Card, Stack } from 'react-bootstrap';
-import { ArrowsFullscreen } from 'react-bootstrap-icons';
+import ExpandIcon from '../../assets/expand.png';
+
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Map } from '../Map';
 
 export const FullDesc = () => {
   const { fetchToggleFavorite, fetchRemoveRoute } = useActions();
-  const { selectedRoute } = useTypedSelector((state) => state.routes);
+  const { selectedRoute, center } = useTypedSelector((state) => state.routes);
 
   if (!selectedRoute) {
-    return <ArrowsFullscreen width={120} />;
+    return (
+      <div className="d-flex flex-column align-items-center justify-content-center h-75">
+        <img src={ExpandIcon} width={120} className="mb-4" />
+        <h3>Select path</h3>
+      </div>
+    );
   }
 
   return (
@@ -20,7 +26,9 @@ export const FullDesc = () => {
         <strong>{selectedRoute.routeLength}</strong>
       </div>
       <p>{selectedRoute.fullDesc}</p>
-      <Card className="h-75">{/* <Map /> */}</Card>
+      <Card className="h-75">
+        <Map key={selectedRoute.id} center={center} waypoints={selectedRoute.waypoints} />
+      </Card>
       <ButtonGroup vertical className="d-grid justify-content-end">
         <Button
           variant="link"

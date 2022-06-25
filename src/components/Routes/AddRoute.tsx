@@ -1,5 +1,7 @@
 import React, { ChangeEvent, FC, useCallback } from 'react';
 import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap';
+import LengthIcon from '../../assets/length.png';
+import ApproveIcon from '../../assets/approved.png';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Map } from '../Map';
@@ -11,7 +13,7 @@ interface AddRouteProps {
 
 export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
   const { updateNewRouteField, fetchCreateRoute } = useActions();
-  const { newRoute } = useTypedSelector((state) => state.routes);
+  const { newRoute, center } = useTypedSelector((state) => state.routes);
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,19 +54,22 @@ export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Full description</Form.Label>
-                  <Form.Control as="textarea" name="fullDesc" onChange={handleChange} rows={10} />
+                  <Form.Control as="textarea" name="fullDesc" onChange={handleChange} rows={6} />
                 </Form.Group>
               </Form>
 
               <div className="d-flex flex-column align-items-center justify-content-center">
-                <h2>Length {newRoute.routeLength}</h2>
-                <Button variant="outline-secondary" className="mt-2" onClick={handleSubmit}>
-                  Add path
+                <div className="d-flex align-items-center gap-3">
+                  <img src={LengthIcon} width="48" />{' '}
+                  <h3 className="m-0">Length {newRoute.routeLength}</h3>
+                </div>
+                <Button variant="outline-secondary" className="mt-3 p-2" onClick={handleSubmit}>
+                  <img src={ApproveIcon} width="24" className="mr-1" /> Add path
                 </Button>
               </div>
             </Col>
             <Col>
-              <Map />
+              <Map center={center} />
             </Col>
           </Row>
         </Container>

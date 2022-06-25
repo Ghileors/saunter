@@ -7,10 +7,15 @@ export const mapOptions: MapOptions = {
   scrollwheel: true,
 };
 
-export const directionOptions = {
+export const markerOptions = {
+  icon: './marker.png',
+};
+
+export const directionOptions: google.maps.DirectionsRendererOptions = {
   polylineOptions: {
     zIndex: 50,
     strokeColor: '#1976D2',
     strokeWeight: 5,
   },
+  markerOptions,
 };

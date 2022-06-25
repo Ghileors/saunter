@@ -42,7 +42,7 @@ const App: FC = () => {
           <SearchInput />
           <RoutersList />
         </Col>
-        <Col className="overflow-auto">
+        <Col>
           <FullDesc />
         </Col>
       </Row>

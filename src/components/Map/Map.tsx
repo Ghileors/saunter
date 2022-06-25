@@ -1,25 +1,20 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
-import { CurrentLocationMarker } from '../CurrentLocationMarker';
+import { CustomMarker } from './CustomMarker';
 import { directionOptions, mapOptions } from '../../configs/map.options';
 import { DirectionsResult, LatLngLiteral, LatLng, MapMouseEvent } from '../../types/google';
 import { ILatLng } from '../../types/google';
 import { useActions } from '../../hooks/useActions';
-
-import style from './Map.module.css';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
-
 interface MapProps {
   center?: LatLngLiteral;
-  markers?: ILatLng[];
+  waypoints?: ILatLng[];
 }
 
-export const Map: FC<MapProps> = () => {
-  const { updateNewRouteField, updateCenter } = useActions();
-  const { center } = useTypedSelector((state) => state.routes);
+export const Map: FC<MapProps> = ({ center, waypoints = [] }) => {
+  const { updateNewRouteField } = useActions();
   const mapRef = useRef<GoogleMap>();
-  const [markers, setMarkers] = useState<ILatLng[]>([]);
+  const [markers, setMarkers] = useState<ILatLng[]>(waypoints);
   const [directions, setDirections] = useState<DirectionsResult>();
 
   const onLoad = useCallback((map: any) => {
@@ -31,8 +26,6 @@ export const Map: FC<MapProps> = () => {
     if (!length) return;
     const start = markers[0].position;
     const end = markers[length - 1].position;
-
-    updateCenter({ lat: start.lat, lng: end.lng });
 
     if (start && end) {
       const waypoints = markers.map(({ position }) => {
@@ -95,7 +88,7 @@ export const Map: FC<MapProps> = () => {
 
   return (
     <GoogleMap
-      mapContainerClassName={style.mapContainer}
+      mapContainerClassName="map-container"
       options={mapOptions}
       center={center}
       zoom={10}
@@ -104,11 +97,11 @@ export const Map: FC<MapProps> = () => {
     >
       {directions && <DirectionsRenderer directions={directions} options={directionOptions} />}
       {markers.map((marker) => (
-        <Marker
+        <CustomMarker
           key={marker.id}
+          id={marker.id}
           position={marker.position}
-          draggable={true}
-          onMouseUp={(e) => moveMarker(e, marker.id)}
+          moveMarker={moveMarker}
         />
       ))}
     </GoogleMap>

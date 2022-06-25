@@ -16,7 +16,7 @@ export const SearchInput = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Button variant="outline-secondary" id="button-addon2" onClick={() => setSearchQuery('')}>
+        <Button variant="outline-secondary" onClick={() => setSearchQuery('')}>
           <Search />
         </Button>
       </InputGroup>

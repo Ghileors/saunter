@@ -6,15 +6,17 @@ import { ShortDesc } from './ShortDesc';
 
 export const RoutersList = () => {
   const { setSelectedRoute } = useActions();
-  const { routesList, selectedRoute } = useTypedSelector((state) => state.routes);
+  const { routesList, selectedRoute, searchQuery } = useTypedSelector((state) => state.routes);
 
-  const filteredRoutes = useMemo(() => {
-    return [...routesList].sort((a, b) => Number(b.isFavorite) - Number(a.isFavorite));
-  }, [routesList]);
+  const sortedByFavorites = useMemo(
+    () => [...routesList].sort((a, b) => Number(b.isFavorite) - Number(a.isFavorite)),
+    [routesList]
+  );
+
 
   return (
     <ListGroup as="ul" className="d-grid gap-2">
-      {filteredRoutes.map((route) => (
+      {sortedByFavorites.map((route) => (
         <ShortDesc
           key={route.id}
           route={route}
