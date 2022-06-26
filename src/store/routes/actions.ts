@@ -12,10 +12,15 @@ export const setSelectedRoute = (route: IRoute | null) => async (dispatch: Dispa
   dispatch({ type: RouteActionTypes.SET_SELECTED_ROUTE, payload: route });
 };
 
+export const resetNewRouteFields = () => async (dispatch: Dispatch<IAction>) => {
+  dispatch({ type: RouteActionTypes.RESET_NEW_ROUTE_FIELDS });
+};
+
 export const fetchCreateRoute = (route: IRoute) => async (dispatch: any) => {
   const id = await createRoute(route);
   dispatch(fetchRoutes());
   dispatch(setSelectedRoute({ ...route, id }));
+  dispatch(resetNewRouteFields());
 };
 
 export const fetchToggleFavorite = (route: IRoute) => async (dispatch: any) => {
@@ -23,6 +28,7 @@ export const fetchToggleFavorite = (route: IRoute) => async (dispatch: any) => {
   dispatch(fetchRoutes());
   dispatch(setSelectedRoute({ ...route, isFavorite: !route.isFavorite }));
 };
+
 export const fetchRemoveRoute = (routeId: string) => async (dispatch: any) => {
   await removeRoute(routeId);
   dispatch(fetchRoutes());
@@ -34,9 +40,10 @@ export const updateNewRouteField =
     dispatch({ type: RouteActionTypes.UPDATE_NEW_ROUTE_FIELD, payload: field });
   };
 
-export const setCurrentLocation = (center: LatLngLiteral) => async (dispatch: Dispatch<IAction>) => {
-  dispatch({ type: RouteActionTypes.SET_CURRENT_LOCATION, payload: center });
-};
+export const setCurrentLocation =
+  (center: LatLngLiteral) => async (dispatch: Dispatch<IAction>) => {
+    dispatch({ type: RouteActionTypes.SET_CURRENT_LOCATION, payload: center });
+  };
 
 export const setSearchQuery = (query: string) => (dispatch: Dispatch<IAction>) => {
   dispatch({ type: RouteActionTypes.SET_SEARCH_QUERY, payload: query });

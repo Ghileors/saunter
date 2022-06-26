@@ -12,7 +12,7 @@ interface AddRouteProps {
 }
 
 export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
-  const { updateNewRouteField, fetchCreateRoute } = useActions();
+  const { updateNewRouteField, fetchCreateRoute, resetNewRouteFields } = useActions();
   const { newRoute, currentLocation } = useTypedSelector((state) => state.routes);
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -20,13 +20,18 @@ export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
     updateNewRouteField({ [name]: value });
   }, []);
 
-  const handleSubmit = () => {
-    fetchCreateRoute(newRoute);
+  const onClose = () => {
+    resetNewRouteFields();
     handleClose();
   };
 
+  const handleSubmit = () => {
+    fetchCreateRoute(newRoute);
+    onClose();
+  };
+
   return (
-    <Modal show={show} onHide={handleClose} size="xl">
+    <Modal show={show} onHide={onClose} size="xl">
       <Modal.Header closeButton>
         <Modal.Title>Add new path</Modal.Title>
       </Modal.Header>
