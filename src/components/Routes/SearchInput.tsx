@@ -1,6 +1,6 @@
-import React, { ChangeEvent, FC } from 'react';
+import React from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
-import { Search } from 'react-bootstrap-icons';
+import { XCircle } from 'react-bootstrap-icons';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 
@@ -17,7 +17,7 @@ export const SearchInput = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <Button variant="outline-secondary" onClick={() => setSearchQuery('')}>
-          <Search />
+          <XCircle />
         </Button>
       </InputGroup>
     </Form>

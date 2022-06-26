@@ -13,10 +13,17 @@ export const RoutersList = () => {
     [routesList]
   );
 
+  const searchedRoutes = useMemo(
+    () =>
+      routesList.filter(
+        (route) => route.name.search(searchQuery) != -1 || route.fullDesc.search(searchQuery) != -1
+      ),
+    [routesList, searchQuery]
+  );
 
   return (
     <ListGroup as="ul" className="d-grid gap-2">
-      {sortedByFavorites.map((route) => (
+      {(searchQuery.length ? searchedRoutes : sortedByFavorites).map((route) => (
         <ShortDesc
           key={route.id}
           route={route}
