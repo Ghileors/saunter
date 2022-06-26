@@ -11,6 +11,7 @@ import { fetchDirection } from '../../http/map-requests';
 interface MapProps {
   center?: LatLngLiteral;
   waypoints?: ILatLng[];
+  isRedactionModeOn?: boolean;
 }
 
 const getPosition = (latLng: LatLng | null) => {
@@ -25,7 +26,7 @@ const getPosition = (latLng: LatLng | null) => {
   }
 };
 
-export const Map: FC<MapProps> = ({ center, waypoints = [] }) => {
+export const Map: FC<MapProps> = ({ center, waypoints = [], isRedactionModeOn }) => {
   const { updateNewRouteField } = useActions();
   const mapRef = useRef<GoogleMap>();
   const [markers, setMarkers] = useState<ILatLng[]>(waypoints);
@@ -36,6 +37,7 @@ export const Map: FC<MapProps> = ({ center, waypoints = [] }) => {
   }, []);
 
   const handleSetMarker = (e: MapMouseEvent) => {
+    if (!isRedactionModeOn) return;
     const position = getPosition(e.latLng);
     if (position) {
       setMarkers((prev) => [...prev, { ...position, id: nanoid() }]);
@@ -100,7 +102,7 @@ export const Map: FC<MapProps> = ({ center, waypoints = [] }) => {
           moveMarker={handleMoveMarker}
         />
       ))}
-      {markers.length && (
+      {isRedactionModeOn && markers.length && (
         <Button
           onClick={handleResetMarkers}
           variant="link"

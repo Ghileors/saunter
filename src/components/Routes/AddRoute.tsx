@@ -78,7 +78,7 @@ export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
               </div>
             </Col>
             <Col>
-              <Map center={currentLocation} />
+              <Map center={currentLocation} isRedactionModeOn />
             </Col>
           </Row>
         </Container>
