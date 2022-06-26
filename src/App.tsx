@@ -44,12 +44,13 @@ const App: FC = () => {
   return (
     <Container className="overflow-hidden h-100">
       <Header handleOpen={toggleShowState} />
+
       <Row className="h-100">
-        <Col className="gap-4">
+        <Col className="gap-4 h-100 w-50">
           <SearchInput />
           <RoutersList />
         </Col>
-        <Col>
+        <Col className="h-100">
           <FullDesc />
         </Col>
       </Row>

@@ -22,7 +22,7 @@ export const RoutersList = () => {
   );
 
   return (
-    <ListGroup as="ul" className="d-grid gap-2">
+    <ListGroup as="ul" className="d-flex gap-2 h-75 overflow-auto ">
       {(searchQuery.length ? searchedRoutes : sortedByFavorites).map((route) => (
         <ShortDesc
           key={route.id}
