@@ -1,12 +1,8 @@
+import { DEFAULT_LOCATION } from '../../constants/map-constants';
 import { IRouteState, IAction, RouteActionTypes } from '../../types/route';
 
-export {};
-
 const initialState: IRouteState = {
-  center: {
-    lat: 43,
-    lng: -80,
-  },
+  currentLocation: DEFAULT_LOCATION,
   routesList: [],
   newRoute: {
     name: '',
@@ -33,6 +29,9 @@ export const routesReducer = (state = initialState, action: IAction): IRouteStat
 
     case RouteActionTypes.SET_SEARCH_QUERY:
       return { ...state, searchQuery: action.payload };
+
+    case RouteActionTypes.SET_CURRENT_LOCATION:
+      return { ...state, currentLocation: action.payload };
 
     default:
       return state;

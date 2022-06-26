@@ -16,7 +16,7 @@ export type ToggleFavorite = {
 };
 
 export interface IRouteState {
-  center: LatLngLiteral;
+  currentLocation: LatLngLiteral;
   routesList: IRoute[];
   newRoute: IRoute;
   selectedRoute: Required<IRoute> | null;
@@ -25,7 +25,7 @@ export interface IRouteState {
 
 export enum RouteActionTypes {
   SET_ROUTES = 'SET_ROUTES',
-  UPDATE_CENTER = 'UPDATE_CENTER',
+  SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION',
   SET_SELECTED_ROUTE = 'SET_SELECTED_ROUTE',
   UPDATE_NEW_ROUTE_FIELD = 'UPDATE_NEW_ROUTE_FIELD',
   SET_SEARCH_QUERY = 'SET_SEARCH_QUERY',

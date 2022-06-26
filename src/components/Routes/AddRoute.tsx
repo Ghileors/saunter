@@ -13,7 +13,7 @@ interface AddRouteProps {
 
 export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
   const { updateNewRouteField, fetchCreateRoute } = useActions();
-  const { newRoute, center } = useTypedSelector((state) => state.routes);
+  const { newRoute, currentLocation } = useTypedSelector((state) => state.routes);
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,7 +47,16 @@ export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Short description</Form.Label>
-                  <Form.Control as="textarea" name="shortDesc" onChange={handleChange} rows={3} />
+                  <Form.Control
+                    as="textarea"
+                    name="shortDesc"
+                    value={newRoute.shortDesc}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      if (newRoute.shortDesc.length === 160) return;
+                      handleChange(e);
+                    }}
+                    rows={3}
+                  />
                   <Form.Text className="text-muted">
                     Limit {160 - newRoute.shortDesc.length} of 160
                   </Form.Text>
@@ -69,7 +78,7 @@ export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
               </div>
             </Col>
             <Col>
-              <Map center={center} />
+              <Map center={currentLocation} />
             </Col>
           </Row>
         </Container>

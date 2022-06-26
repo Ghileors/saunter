@@ -8,7 +8,7 @@ import { Map } from '../Map';
 
 export const FullDesc = () => {
   const { fetchToggleFavorite, fetchRemoveRoute } = useActions();
-  const { selectedRoute, center } = useTypedSelector((state) => state.routes);
+  const { selectedRoute } = useTypedSelector((state) => state.routes);
 
   if (!selectedRoute) {
     return (
@@ -27,7 +27,7 @@ export const FullDesc = () => {
       </div>
       <p>{selectedRoute.fullDesc}</p>
       <Card className="h-75">
-        <Map key={selectedRoute.id} center={center} waypoints={selectedRoute.waypoints} />
+        <Map key={selectedRoute.id} waypoints={selectedRoute.waypoints} />
       </Card>
       <ButtonGroup vertical className="d-grid justify-content-end">
         <Button

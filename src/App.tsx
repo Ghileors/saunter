@@ -6,6 +6,8 @@ import { SearchInput } from './components/Routes/SearchInput';
 import { RoutersList } from './components/Routes/RoutersList';
 import { FullDesc } from './components/Routes/FullDesc';
 import { AddRoute } from './components/Routes/AddRoute';
+import { getBrowserLocation } from './utils/geo';
+import { LatLngLiteral } from './types/google';
 import { useActions } from './hooks/useActions';
 
 import './App.css';
@@ -13,7 +15,7 @@ import './App.css';
 const API_KEY = `${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
 const App: FC = () => {
-  const { fetchRoutes } = useActions();
+  const { fetchRoutes, setCurrentLocation } = useActions();
   const [show, setShow] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
@@ -23,7 +25,12 @@ const App: FC = () => {
   });
 
   useEffect(() => {
-    isLoaded && fetchRoutes();
+    if (isLoaded) {
+      fetchRoutes();
+      getBrowserLocation().then((currLoc: LatLngLiteral) => {
+        setCurrentLocation(currLoc);
+      });
+    }
   }, [isLoaded]);
 
   if (!isLoaded) {

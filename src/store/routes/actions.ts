@@ -34,8 +34,8 @@ export const updateNewRouteField =
     dispatch({ type: RouteActionTypes.UPDATE_NEW_ROUTE_FIELD, payload: field });
   };
 
-export const updateCenter = (center: LatLngLiteral) => async (dispatch: Dispatch<IAction>) => {
-  dispatch({ type: RouteActionTypes.UPDATE_CENTER, payload: center });
+export const setCurrentLocation = (center: LatLngLiteral) => async (dispatch: Dispatch<IAction>) => {
+  dispatch({ type: RouteActionTypes.SET_CURRENT_LOCATION, payload: center });
 };
 
 export const setSearchQuery = (query: string) => (dispatch: Dispatch<IAction>) => {

@@ -1,88 +1,77 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
-import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
+import { GoogleMap, DirectionsRenderer } from '@react-google-maps/api';
 import { CustomMarker } from './CustomMarker';
 import { directionOptions, mapOptions } from '../../configs/map.options';
 import { DirectionsResult, LatLngLiteral, LatLng, MapMouseEvent } from '../../types/google';
 import { ILatLng } from '../../types/google';
 import { useActions } from '../../hooks/useActions';
+import { fetchDirection } from '../../http/map-requests';
 interface MapProps {
   center?: LatLngLiteral;
   waypoints?: ILatLng[];
 }
 
+const getPosition = (latLng: LatLng | null) => {
+  try {
+    if (latLng) {
+      return { position: { lat: latLng!.lat(), lng: latLng!.lng() } };
+    }
+    return null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 export const Map: FC<MapProps> = ({ center, waypoints = [] }) => {
   const { updateNewRouteField } = useActions();
   const mapRef = useRef<GoogleMap>();
   const [markers, setMarkers] = useState<ILatLng[]>(waypoints);
-  const [directions, setDirections] = useState<DirectionsResult>();
+  const [directions, setDirections] = useState<DirectionsResult>(undefined);
 
   const onLoad = useCallback((map: any) => {
     mapRef.current = map;
   }, []);
 
-  const fetchDirection = () => {
-    const length = markers.length;
-    if (!length) return;
-    const start = markers[0].position;
-    const end = markers[length - 1].position;
-
-    if (start && end) {
-      const waypoints = markers.map(({ position }) => {
-        return {
-          location: `${position.lat},${position.lng}`,
-          stopover: false,
-        };
-      });
-      const service = new google.maps.DirectionsService();
-      service.route(
-        {
-          origin: start,
-          destination: end,
-          waypoints,
-          travelMode: google.maps.TravelMode.WALKING,
-        },
-        (response, status) => {
-          if (status === 'OK' && response) {
-            setDirections(response);
-            const routeLength = response!.routes[0]!.legs[0]!.distance!.text;
-            updateNewRouteField({ routeLength, waypoints: markers });
-          }
-        }
-      );
-    }
-  };
-
-  const getPosition = (latLng: LatLng | null) => {
-    if (latLng) {
-      return { position: { lat: latLng!.lat(), lng: latLng!.lng() } };
-    }
-    return null;
-  };
-
-  const onSetMarker = (e: MapMouseEvent) => {
+  const handleSetMarker = (e: MapMouseEvent) => {
     const position = getPosition(e.latLng);
     if (position) {
       setMarkers((prev) => [...prev, { ...position, id: nanoid() }]);
     }
   };
 
-  const moveMarker = (e: MapMouseEvent, id: string) => {
-    const position = getPosition(e.latLng);
-    if (position) {
-      const copyMarkers = markers.map((marker) => {
-        if (marker.id === id) {
-          return { ...marker, ...position };
-        }
-        return marker;
-      });
-      setMarkers(copyMarkers);
+  const handleMoveMarker = (e: MapMouseEvent, id: string) => {
+    try {
+      const position = getPosition(e.latLng);
+      if (position) {
+        const copyMarkers = markers.map((marker) => {
+          if (marker.id === id) {
+            return { ...marker, ...position };
+          }
+          return marker;
+        });
+        setMarkers(copyMarkers);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
     if (markers.length > 1) {
-      fetchDirection();
+      const getRDirection = async () => {
+        try {
+          const response: DirectionsResult = await fetchDirection(markers);
+          const routeLength = response!.routes[0]!.legs[0]!.distance!.text;
+
+          setDirections(response);
+          updateNewRouteField({ routeLength, waypoints: markers });
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getRDirection();
     }
   }, [markers]);
 
@@ -93,7 +82,7 @@ export const Map: FC<MapProps> = ({ center, waypoints = [] }) => {
       center={center}
       zoom={10}
       onLoad={onLoad}
-      onClick={onSetMarker}
+      onClick={handleSetMarker}
     >
       {directions && <DirectionsRenderer directions={directions} options={directionOptions} />}
       {markers.map((marker) => (
@@ -101,7 +90,7 @@ export const Map: FC<MapProps> = ({ center, waypoints = [] }) => {
           key={marker.id}
           id={marker.id}
           position={marker.position}
-          moveMarker={moveMarker}
+          moveMarker={handleMoveMarker}
         />
       ))}
     </GoogleMap>
