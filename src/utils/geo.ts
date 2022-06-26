@@ -1,7 +1,7 @@
 import { LatLngLiteral } from '../types/google';
 
 export const getBrowserLocation = (): Promise<LatLngLiteral> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _) => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {

@@ -12,9 +12,9 @@ export const SearchInput = () => {
     <Form>
       <InputGroup className="mb-3">
         <Form.Control
-          placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search..."
         />
         <Button variant="outline-secondary" onClick={() => setSearchQuery('')}>
           <XCircle />

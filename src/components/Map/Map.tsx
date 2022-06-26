@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { GoogleMap, DirectionsRenderer } from '@react-google-maps/api';
+import { Button } from 'react-bootstrap';
 import { CustomMarker } from './CustomMarker';
 import { directionOptions, mapOptions } from '../../configs/map.options';
 import { DirectionsResult, LatLngLiteral, LatLng, MapMouseEvent } from '../../types/google';
@@ -58,6 +59,12 @@ export const Map: FC<MapProps> = ({ center, waypoints = [] }) => {
     }
   };
 
+  const handleResetMarkers = () => {
+    setMarkers([]);
+    setDirections(undefined);
+    updateNewRouteField({ routeLength: '', waypoints: [] });
+  };
+
   useEffect(() => {
     if (markers.length > 1) {
       const getRDirection = async () => {
@@ -93,6 +100,15 @@ export const Map: FC<MapProps> = ({ center, waypoints = [] }) => {
           moveMarker={handleMoveMarker}
         />
       ))}
+      {markers.length && (
+        <Button
+          onClick={handleResetMarkers}
+          variant="link"
+          className="position-absolute start-50 translate-middle-x"
+        >
+          Reset markers
+        </Button>
+      )}
     </GoogleMap>
   );
 };
