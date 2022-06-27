@@ -67,6 +67,7 @@ export const Map: FC<MapProps> = ({ center, waypoints = [], isRedactionModeOn })
     setMarkers([]);
     setDirections(undefined);
     updateNewRouteField({ waypoints: [] });
+    setNewRouteLength('');
   };
 
   useEffect(() => {
@@ -84,6 +85,8 @@ export const Map: FC<MapProps> = ({ center, waypoints = [], isRedactionModeOn })
       getRDirection();
     }
   }, [markers]);
+
+  useEffect(() => () => handleResetMarkers(), []);
 
   return (
     <GoogleMap
