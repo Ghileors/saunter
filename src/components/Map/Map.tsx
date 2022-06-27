@@ -1,9 +1,8 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
-import { GoogleMap, DirectionsRenderer } from '@react-google-maps/api';
+import { GoogleMap, DirectionsRenderer, Marker } from '@react-google-maps/api';
 import { Button } from 'react-bootstrap';
-import { CustomMarker } from './CustomMarker';
-import { directionOptions, mapOptions } from '../../configs/map.options';
+import { directionOptions, mapOptions, markerOptions } from '../../configs/map.options';
 import { DirectionsResult, LatLngLiteral, LatLng, MapMouseEvent } from '../../types/google';
 import { ILatLng } from '../../types/google';
 import { useActions } from '../../hooks/useActions';
@@ -27,7 +26,7 @@ const getPosition = (latLng: LatLng | null) => {
 };
 
 export const Map: FC<MapProps> = ({ center, waypoints = [], isRedactionModeOn }) => {
-  const { updateNewRouteField } = useActions();
+  const { updateNewRouteField, setNewRouteLength } = useActions();
   const mapRef = useRef<GoogleMap>();
   const [markers, setMarkers] = useState<ILatLng[]>(waypoints);
   const [directions, setDirections] = useState<DirectionsResult>(undefined);
@@ -40,7 +39,9 @@ export const Map: FC<MapProps> = ({ center, waypoints = [], isRedactionModeOn })
     if (!isRedactionModeOn) return;
     const position = getPosition(e.latLng);
     if (position) {
-      setMarkers((prev) => [...prev, { ...position, id: nanoid() }]);
+      const newMarker = { ...position, id: nanoid() };
+      setMarkers((prev) => [...prev, newMarker]);
+      updateNewRouteField({ waypoints: [...markers, newMarker] });
     }
   };
 
@@ -55,6 +56,7 @@ export const Map: FC<MapProps> = ({ center, waypoints = [], isRedactionModeOn })
           return marker;
         });
         setMarkers(copyMarkers);
+        updateNewRouteField({ waypoints: copyMarkers });
       }
     } catch (error) {
       console.log(error);
@@ -64,7 +66,7 @@ export const Map: FC<MapProps> = ({ center, waypoints = [], isRedactionModeOn })
   const handleResetMarkers = () => {
     setMarkers([]);
     setDirections(undefined);
-    updateNewRouteField({ routeLength: '', waypoints: [] });
+    updateNewRouteField({ waypoints: [] });
   };
 
   useEffect(() => {
@@ -73,9 +75,8 @@ export const Map: FC<MapProps> = ({ center, waypoints = [], isRedactionModeOn })
         try {
           const response: DirectionsResult = await fetchDirection(markers);
           const routeLength = response!.routes[0]!.legs[0]!.distance!.text;
-
+          setNewRouteLength(routeLength);
           setDirections(response);
-          updateNewRouteField({ routeLength, waypoints: markers });
         } catch (error) {
           console.log(error);
         }
@@ -93,13 +94,25 @@ export const Map: FC<MapProps> = ({ center, waypoints = [], isRedactionModeOn })
       onLoad={onLoad}
       onClick={handleSetMarker}
     >
-      {directions && <DirectionsRenderer directions={directions} options={directionOptions} />}
+      {directions && (
+        <DirectionsRenderer
+          directions={directions}
+          options={{
+            ...directionOptions,
+            markerOptions: {
+              ...markerOptions,
+              opacity: isRedactionModeOn ? 0 : 1,
+              zIndex: 1,
+            },
+          }}
+        />
+      )}
       {markers.map((marker) => (
-        <CustomMarker
+        <Marker
           key={marker.id}
-          id={marker.id}
           position={marker.position}
-          moveMarker={handleMoveMarker}
+          options={{ ...markerOptions, draggable: true, zIndex: 2 }}
+          onMouseUp={(e) => handleMoveMarker(e, marker.id)}
         />
       ))}
       {isRedactionModeOn && markers.length && (

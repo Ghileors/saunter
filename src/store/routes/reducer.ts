@@ -5,6 +5,7 @@ const initialState: IRouteState = {
   currentLocation: DEFAULT_LOCATION,
   routesList: [],
   newRoute: INITIAL_ROUTE_DATA,
+  newRouteLength: '',
   selectedRoute: null,
   searchQuery: '',
 };
@@ -19,6 +20,9 @@ export const routesReducer = (state = initialState, action: RoutesAction): IRout
 
     case RouteActionTypes.UPDATE_NEW_ROUTE_FIELD:
       return { ...state, newRoute: { ...state.newRoute, ...action.payload } };
+
+    case RouteActionTypes.SET_NEW_ROUTE_LENGTH:
+      return { ...state, newRouteLength: action.payload };
 
     case RouteActionTypes.SET_SEARCH_QUERY:
       return { ...state, searchQuery: action.payload };

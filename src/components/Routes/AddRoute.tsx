@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { ChangeEvent, FC, useState, useMemo, useEffect } from 'react';
 import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap';
 import { Map } from '../Map';
 import LengthIcon from '../../assets/length.png';
@@ -7,8 +7,6 @@ import NotApproveIcon from '../../assets/not-approved.png';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { NewRoute } from '../../types/route';
-import { useEffect } from 'react';
-import { useMemo } from 'react';
 
 interface AddRouteProps {
   show: boolean;
@@ -31,7 +29,7 @@ type ErrorsType = ReturnType<typeof validateForm>;
 
 export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
   const { updateNewRouteField, fetchCreateRoute, resetNewRouteFields } = useActions();
-  const { newRoute, currentLocation } = useTypedSelector((state) => state.routes);
+  const { newRoute, currentLocation, newRouteLength } = useTypedSelector((state) => state.routes);
   const [errors, setErrors] = useState<ErrorsType>({});
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,12 +45,11 @@ export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
 
   const isApprovedSubmit = useMemo(() => !Object.keys(errors).length, [errors]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isApprovedSubmit) {
       return;
     }
-
-    fetchCreateRoute(newRoute);
+    fetchCreateRoute({ ...newRoute, routeLength: newRouteLength });
     onClose();
   };
 
@@ -121,8 +118,8 @@ export const AddRoute: FC<AddRouteProps> = ({ show, handleClose }) => {
 
               <div className="d-flex flex-column align-items-center justify-content-center">
                 <div className="d-flex align-items-center gap-3">
-                  <img src={LengthIcon} width="48" />{' '}
-                  <h3 className="m-0">Length {newRoute.routeLength}</h3>
+                  <img src={LengthIcon} width="48" /> <div id="length-portal"></div>
+                  <h3 className="m-0">Length {newRouteLength}</h3>
                 </div>
                 <Button variant="outline-secondary" className="mt-3 p-2" onClick={handleSubmit}>
                   <img

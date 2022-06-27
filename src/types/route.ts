@@ -21,6 +21,7 @@ export interface IRouteState {
   currentLocation: LatLngLiteral;
   routesList: IRoute[];
   newRoute: NewRoute;
+  newRouteLength: string;
   selectedRoute: Required<IRoute> | null;
   searchQuery: string;
 }
@@ -32,6 +33,7 @@ export enum RouteActionTypes {
   UPDATE_NEW_ROUTE_FIELD = 'UPDATE_NEW_ROUTE_FIELD',
   RESET_NEW_ROUTE_FIELDS = 'RESET_NEW_ROUTE_FIELDS',
   SET_SEARCH_QUERY = 'SET_SEARCH_QUERY',
+  SET_NEW_ROUTE_LENGTH = 'SET_NEW_ROUTE_LENGTH',
 }
 
 interface SetSelectedRoute {
@@ -47,6 +49,11 @@ interface SetRoutes {
 interface UpdateNewRoute {
   type: RouteActionTypes.UPDATE_NEW_ROUTE_FIELD;
   payload: Partial<NewRoute>;
+}
+
+interface SetNewRouteLength {
+  type: RouteActionTypes.SET_NEW_ROUTE_LENGTH;
+  payload: string;
 }
 
 interface SetSearchQ {
@@ -67,6 +74,7 @@ export type RoutesAction =
   | SetSelectedRoute
   | SetRoutes
   | UpdateNewRoute
+  | SetNewRouteLength
   | SetSearchQ
   | SetCurLoc
   | ResetNewRoute;
