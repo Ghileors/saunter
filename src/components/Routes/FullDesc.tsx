@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ButtonGroup, Col, Container, Row } from 'react-bootstrap';
+import { Button, ButtonGroup, Container, Row } from 'react-bootstrap';
 import ExpandIcon from '../../assets/expand.png';
 import { Map } from '../Map';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
