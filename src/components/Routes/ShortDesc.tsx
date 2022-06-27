@@ -31,7 +31,7 @@ export const ShortDesc: FC<ShortDescProps> = ({ route, isActive, handleSelect })
               {route.isFavorite && <StarFill />}
               <h6 className="m-0">{route.name}</h6>
             </div>
-            <p className="m-0 col-10 text-truncate">{route.shortDesc}</p>
+            <p className={`m-0 col-10 ${!isActive && 'text-truncate'}`}>{route.shortDesc}</p>
           </Col>
           <Col className={`${colClass} col-3 gap-2`}>
             <strong>{route.routeLength}</strong>
