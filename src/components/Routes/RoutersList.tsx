@@ -11,13 +11,14 @@ export const RoutersList = () => {
     [routesList]
   );
 
-  const searchedRoutes = useMemo(
-    () =>
-      routesList.filter(
-        (route) => route.name.search(searchQuery) != -1 || route.fullDesc.search(searchQuery) != -1
-      ),
-    [routesList, searchQuery]
-  );
+  const searchedRoutes = useMemo(() => {
+    const loweredQuery = searchQuery.toLocaleLowerCase();
+    return routesList.filter(
+      (route) =>
+        route.name.toLocaleLowerCase().search(loweredQuery) != -1 ||
+        route.fullDesc.toLocaleLowerCase().search(loweredQuery) != -1
+    );
+  }, [routesList, searchQuery]);
 
   return (
     <ListGroup as="ul" className="d-flex gap-2 h-75 overflow-auto ">
