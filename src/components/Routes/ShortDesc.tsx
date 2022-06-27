@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { Col, Container, ListGroup, Row } from 'react-bootstrap';
 import { ChevronRight, StarFill, ArrowsFullscreen } from 'react-bootstrap-icons';
+import { useActions } from '../../hooks/useActions';
 import { IRoute } from '../../types/route';
 
 const colClass = 'p-0 d-flex justify-content-center align-items-center';
@@ -8,13 +9,13 @@ const colClass = 'p-0 d-flex justify-content-center align-items-center';
 interface ShortDescProps {
   route: IRoute;
   isActive: boolean | null;
-  handleSelect: (route: IRoute) => void;
 }
 
-export const ShortDesc: FC<ShortDescProps> = ({ route, isActive, handleSelect }) => {
+export const ShortDesc: FC<ShortDescProps> = ({ route, isActive }) => {
+  const { setSelectedRoute } = useActions();
   return (
     <ListGroup.Item
-      onClick={() => handleSelect(route)}
+      onClick={() => setSelectedRoute(route as Required<IRoute>)}
       variant="secondary"
       as="li"
       role="button"

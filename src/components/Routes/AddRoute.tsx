@@ -6,7 +6,7 @@ import ApproveIcon from '../../assets/approved.png';
 import NotApproveIcon from '../../assets/not-approved.png';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
-import { IRoute } from '../../types/route';
+import { NewRoute } from '../../types/route';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
 
@@ -17,8 +17,8 @@ interface AddRouteProps {
 
 const SHORT_DESC_LIMIT = 160;
 
-const validateForm = (route: IRoute) => {
-  const { routeLength, isFavorite, id, ...requiredFields } = route;
+const validateForm = (route: NewRoute) => {
+  const { routeLength, isFavorite, ...requiredFields } = route;
   return Object.entries(requiredFields).reduce<Record<string, boolean>>((errors, [key, value]) => {
     if (!value.length) {
       errors[key] = true;

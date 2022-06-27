@@ -1,5 +1,5 @@
 import { DEFAULT_LOCATION, INITIAL_ROUTE_DATA } from '../../constants/map-constants';
-import { IRouteState, IAction, RouteActionTypes } from '../../types/route';
+import { IRouteState, RoutesAction, RouteActionTypes, IRoute } from '../../types/route';
 
 const initialState: IRouteState = {
   currentLocation: DEFAULT_LOCATION,
@@ -9,7 +9,7 @@ const initialState: IRouteState = {
   searchQuery: '',
 };
 
-export const routesReducer = (state = initialState, action: IAction): IRouteState => {
+export const routesReducer = (state = initialState, action: RoutesAction): IRouteState => {
   switch (action.type) {
     case RouteActionTypes.SET_SELECTED_ROUTE:
       return { ...state, selectedRoute: action.payload };

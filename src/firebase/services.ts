@@ -1,5 +1,5 @@
 import { doc, collection, getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { IRoute } from '../types/route';
+import { NewRoute } from '../types/route';
 
 import { db } from './db';
 
@@ -14,7 +14,7 @@ export const getRoutes = async () => {
   return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 };
 
-export const createRoute = async (route: IRoute) => {
+export const createRoute = async (route: NewRoute) => {
   const doc = await addDoc(routesCollectionRef, route);
   return doc.id;
 };
