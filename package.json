@@ -33,19 +33,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "lint": "eslint --ext .ts,.tsx src --fix",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "prettier": {
     "singleQuote": true,
     "printWidth": 100
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
@@ -69,13 +62,6 @@
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
-    "@typescript-eslint/parser": "^4.6.0",
-    "eslint": "^5.6.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.21.5",
     "prettier": "^2.1.2"
   }
 }
